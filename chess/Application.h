@@ -1,5 +1,12 @@
 #include <SDL.h>
 #include <SDL_image.h>
+#include <iostream>
+#include <set>
+#include "Piece.h"
+#include <vector>
+#include "Coordinate.h"
+
+using namespace std;
 
 class Application {
 public:
@@ -15,11 +22,19 @@ public:
 
 	bool running();
 
+	void handleMouseDownEvent(SDL_Event sdlEvent);
+	void drawPossibleMoves();
+	void dropPiece();
+
 	int width;
 	int height;
 
 private:
-	bool isRunning;
-	SDL_Window *window;
-	SDL_Renderer* renderer;
+	vector<Piece*> m_pieces;
+	Piece* m_draggingPiece;
+	vector<Coordinate> m_possibleMoves;
+	color m_playerTurn;
+	bool m_isRunning;
+	SDL_Window *m_window;
+	SDL_Renderer* m_renderer;
 };
