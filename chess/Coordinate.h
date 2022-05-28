@@ -1,8 +1,8 @@
 #pragma once
 #include "Piece.h"
 
-struct Coordinate {
+class Coordinate {
+public:
 	int col;
 	int row;
-	//Piece* enemey;
 };

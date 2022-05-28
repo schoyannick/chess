@@ -59,6 +59,7 @@ std::vector<Piece*> createPieces(SDL_Renderer* renderer) {
     for (size_t i = 0; i < 8; i++)
     {
         Pawn* pawn = new Pawn(1, i, BLACK, textures[5]);
+        pawn->canPromote = true;
         pieces.push_back(pawn);
     }
 
@@ -67,6 +68,7 @@ std::vector<Piece*> createPieces(SDL_Renderer* renderer) {
     for (size_t i = 0; i < 8; i++)
     {
         Pawn* pawn = new Pawn(6, i, WHITE, textures[11]);
+        pawn->canPromote = true;
         pieces.push_back(pawn);
     }
 

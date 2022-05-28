@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="CreatePieces.cpp" />
+    <ClCompile Include="GetAllCoordinates.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Piece.cpp" />
   </ItemGroup>
@@ -144,6 +145,7 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="CreatePieces.h" />
+    <ClInclude Include="GetAllCoordinates.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Pawn.h" />

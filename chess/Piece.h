@@ -17,6 +17,7 @@ public:
 		alive = true;
 		dragPositionX = NULL;
 		dragPositionY = NULL;
+		canPromote = false;
 	};
 	int row;
 	int col;
@@ -24,6 +25,7 @@ public:
 	int dragPositionX;
 	int dragPositionY;
 	bool alive;
+	bool canPromote;
 	SDL_Texture* texture;
 	virtual vector<Coordinate> getPossibleMoves(vector<Piece*> pieces);
 private:

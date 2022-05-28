@@ -22,6 +22,7 @@ public:
 
 	bool running();
 
+	void drawBoard();
 	void handleMouseDownEvent(SDL_Event sdlEvent);
 	void drawPossibleMoves();
 	void dropPiece();
@@ -37,4 +38,5 @@ private:
 	bool m_isRunning;
 	SDL_Window *m_window;
 	SDL_Renderer* m_renderer;
+	bool m_isPromotionShown;
 };

@@ -17,6 +17,7 @@ Application::Application() {
     m_playerTurn = WHITE;
     m_draggingPiece = nullptr;
     m_possibleMoves = {};
+    m_isPromotionShown = false;
 }
 
 Application::~Application() {
@@ -47,7 +48,7 @@ void Application::handleMouseDownEvent(SDL_Event sdlEvent)
     bool found = false;
 
     for (auto piece : m_pieces) {
-        if (piece->color == m_playerTurn && piece->row == row && piece->col == col) {
+        if (piece->alive && piece->color == m_playerTurn && piece->row == row && piece->col == col) {
             m_draggingPiece = piece;
             found = true;
             break;
@@ -128,11 +129,8 @@ void Application::drawPossibleMoves()
 void Application::dropPiece()
 {
     if (m_draggingPiece && m_draggingPiece->dragPositionX != NULL && m_draggingPiece->dragPositionY != NULL) {
-        std::cout << m_draggingPiece->dragPositionY << " " << m_draggingPiece->dragPositionX << std::endl;
         int row = m_draggingPiece->dragPositionY / (height / 8);
         int col = m_draggingPiece->dragPositionX / (width / 8);
-
-        std::cout << row << " " << col << std::endl;
 
         bool canDrop = false;
 
@@ -144,39 +142,54 @@ void Application::dropPiece()
         }
 
         if (canDrop) {
+            for (auto& piece : m_pieces) {
+                if (piece->color != m_draggingPiece->color && piece->row == row && piece->col == col) {
+                    piece->alive = false;
+                }
+            }
+
             m_draggingPiece->row = row;
             m_draggingPiece->col = col;
 
-            if (m_playerTurn == WHITE) {
-                m_playerTurn = BLACK;
+            if (m_draggingPiece->canPromote && ((row == 0 && m_draggingPiece->color == WHITE) || row == 7 && m_draggingPiece->color == BLACK)) {
+                std::cout << "Promote" << std::endl;
             }
-            else {
-                m_playerTurn = WHITE;
-            }
+
+            m_playerTurn = m_playerTurn == WHITE ? BLACK : WHITE;
         }
     }
 }
 
-void drawBoard(SDL_Renderer* renderer, int width, int height) {
+void Application::drawBoard() {
     bool white = false;
     for (int row = 0; row < 8; row++)
     {
         for (int col = 0; col < 8; col++)
         {
-            SDL_Rect r{};
-            r.x = col * width / 8;
-            r.y = row * height / 8;
-            r.w = width / 8;
-            r.h = height / 8;
+            SDL_Rect rect{};
+            rect.x = col * width / 8;
+            rect.y = row * height / 8;
+            rect.w = width / 8;
+            rect.h = height / 8;
 
             if (white)
             {
-                SDL_SetRenderDrawColor(renderer, 186, 202, 68, 255);
+                SDL_SetRenderDrawColor(m_renderer, 186, 202, 68, 255);
             }
             else {
-                SDL_SetRenderDrawColor(renderer, 118, 150, 86, 255);
+                SDL_SetRenderDrawColor(m_renderer, 118, 150, 86, 255);
             }
-            SDL_RenderFillRect(renderer, &r);
+            SDL_RenderFillRect(m_renderer, &rect);
+
+            if (m_draggingPiece) {
+                int draggingRow = m_draggingPiece->dragPositionY / (height / 8);
+                int draggingCol = m_draggingPiece->dragPositionX / (width / 8);
+                if (draggingRow == row && draggingCol == col) {
+                    SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
+                    SDL_RenderDrawRect(m_renderer, &rect);
+                }
+            }
+         
             white = !white;
         }
         white = !white;
@@ -185,7 +198,7 @@ void drawBoard(SDL_Renderer* renderer, int width, int height) {
 
 void drawPieces(SDL_Renderer* renderer, std::vector<Piece*> pieces, int width, int height) {
     for (auto piece : pieces) {
-        if (piece->texture) {
+        if (piece->alive) {
             SDL_Rect rect{};
             rect.w = width / 8;
             rect.h = height / 8;
@@ -207,13 +220,13 @@ void Application::render() {
     SDL_RenderClear(m_renderer);
 
     // Draw the board
-    drawBoard(m_renderer, width, height);
-
-    // Draw possible moves
-    drawPossibleMoves();
+    drawBoard();
 
     // Draw the pieces
     drawPieces(m_renderer, m_pieces, width, height);
+
+    // Draw possible moves
+    drawPossibleMoves();
 
     SDL_RenderPresent(m_renderer);
 }
