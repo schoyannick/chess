@@ -1,10 +1,8 @@
 #pragma once
-#include <algorithm>
 #include <iostream>
 #include <vector>
 #include "Piece.h" 
 #include "Coordinate.h"
-#include "GetAllCoordinates.h"
 
 class Rook : public Piece {
 	using Piece::Piece;
@@ -13,12 +11,10 @@ class Rook : public Piece {
 		vector<Coordinate> coordinates = {};
 		vector<Coordinate> directs = {
 			{ 1, 0 },
-			{ -1, 0},
+			{ -1, 0 },
 			{ 0, 1 },
 			{ 0, - 1 }
 		};
-
-		vector<CoordPiece> allCords = getAllCoordinates(pieces);
 
 		for (auto& direct : directs) {
 			Coordinate newCoord = {};
@@ -26,39 +22,25 @@ class Rook : public Piece {
 			newCoord.row = direct.row + row;
 
 			while (newCoord.col >= 0 && newCoord.col < 8 && newCoord.row >= 0 && newCoord.row < 8) {
-				bool find = false;
-				for (auto& coordPiece : allCords) {
-					if (coordPiece.cord.row == newCoord.row && coordPiece.cord.col == newCoord.col) {
-						if (coordPiece.piece->color == color) {
-							find = true;
-							break;
-						}
-						else {
-							find = true;
+				bool found = false;
+				for (auto& piece : pieces) {
+					if (piece->row == newCoord.row && piece->col == newCoord.col) {
+						found = true;
+						if (piece->color != color) {
 							coordinates.push_back(newCoord);
-							break;
 						}
+						break;
 					}
 				}
 				
-				if (find) {
-					newCoord.row = 100;
-					continue;
+				if (found) {
+					break;
 				}
 
 				coordinates.push_back(newCoord);
-				if (direct.row > 0) {
-					newCoord.row++;
-				}
-				else if (direct.row < 0) {
-					newCoord.row--;
-				}
-				else if (direct.col > 0) {
-					newCoord.col++;
-				}
-				else {
-					newCoord.col--;
-				}
+
+				newCoord.row += direct.row;
+				newCoord.col += direct.col;
 			}
 		}
 
