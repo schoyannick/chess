@@ -6,7 +6,8 @@
 
 using namespace std;
 
-class Pawn : public Piece {
+class Pawn : public Piece
+{
 	using Piece::Piece;
 
 	vector<Coordinate> getPossibleMoves(vector<Piece*> pieces) {
@@ -18,8 +19,8 @@ class Pawn : public Piece {
 		Coordinate c2 = { -100, -100 };
 
 		// Enemy
-		Coordinate Enemey1 = {};
-		Coordinate Enemey2 = {};
+		Coordinate enemey1 = {};
+		Coordinate enemey2 = {};
 
 		if (color == WHITE) {
 			// One up
@@ -30,8 +31,8 @@ class Pawn : public Piece {
 				c2 = { 0, -2 };
 			}
 
-			Enemey1 = { -1, -1 };
-			Enemey2 = { 1, -1 };
+			enemey1 = { -1, -1 };
+			enemey2 = { 1, -1 };
 		}
 		else {
 			// One down
@@ -42,8 +43,8 @@ class Pawn : public Piece {
 				c2 = { 0, 2 };
 			}
 
-			Enemey1 = { -1, 1 };
-			Enemey2 = { 1, 1 };
+			enemey1 = { -1, 1 };
+			enemey2 = { 1, 1 };
 		}
 
 		bool addC1 = true;
@@ -51,22 +52,18 @@ class Pawn : public Piece {
 
 		// Check for enemies
 		for (auto& piece : pieces) {
-			if (!piece->alive) {
-				continue;
+			if (piece->color != color && row + enemey1.row == piece->row && col + enemey1.col == piece->col) {
+				directs.push_back(enemey1);
 			}
-
-			if (piece->color != color && row + Enemey1.row == piece->row && col + Enemey1.col == piece->col) {
-				directs.push_back(Enemey1);
-			}
-			else if (piece->color != color && row + Enemey2.row == piece->row  && col + Enemey2.col == piece->col) {
-				directs.push_back(Enemey2);
+			else if (piece->color != color && row + enemey2.row == piece->row && col + enemey2.col == piece->col) {
+				directs.push_back(enemey2);
 			}
 
 			if (row + c1.row == piece->row && col + c1.col == piece->col) {
 				addC1 = false;
 			}
 
-			if (row + c2.row == piece->row&& col + c2.col == piece->col) {
+			if (row + c2.row == piece->row && col + c2.col == piece->col) {
 				addC2 = false;
 			}
 		}

@@ -8,21 +8,22 @@
 
 using namespace std;
 
-class Application {
+class Application
+{
 public:
 	Application();
 	~Application();
 
 	void init(const char* title, int x, int y);
-	
 	void handleEvents();
 	void update();
 	void render();
 	void clean();
-
 	bool running();
 
 	void drawBoard();
+	void drawPieces();
+	void drawPromotion();
 	void handleMouseDownEvent(SDL_Event sdlEvent);
 	void drawPossibleMoves();
 	void dropPiece();
@@ -36,7 +37,7 @@ private:
 	vector<Coordinate> m_possibleMoves;
 	color m_playerTurn;
 	bool m_isRunning;
-	SDL_Window *m_window;
+	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;
-	bool m_isPromotionShown;
+	Piece* m_promotionPiece;
 };

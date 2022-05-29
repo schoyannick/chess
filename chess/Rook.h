@@ -4,7 +4,8 @@
 #include "Piece.h" 
 #include "Coordinate.h"
 
-class Rook : public Piece {
+class Rook : public Piece
+{
 	using Piece::Piece;
 
 	vector<Coordinate> getPossibleMoves(vector<Piece*> pieces) {
@@ -13,7 +14,7 @@ class Rook : public Piece {
 			{ 1, 0 },
 			{ -1, 0 },
 			{ 0, 1 },
-			{ 0, - 1 }
+			{ 0, -1 }
 		};
 
 		for (auto& direct : directs) {
@@ -32,7 +33,7 @@ class Rook : public Piece {
 						break;
 					}
 				}
-				
+
 				if (found) {
 					break;
 				}

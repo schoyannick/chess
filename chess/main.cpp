@@ -19,14 +19,14 @@ int main() {
 		app->handleEvents();
 		app->update();
 		app->render();
-	
+
 		frameTime = SDL_GetTicks() - frameStart;
 
 		if (frameDelay > frameTime) {
 			SDL_Delay(frameDelay - frameTime);
 		}
 	}
-	
+
 	app->clean();
 
 	return 0;
