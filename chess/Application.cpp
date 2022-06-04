@@ -155,12 +155,32 @@ void Application::dropPiece()
 				m_pieces.erase(m_pieces.begin() + deleteIndex);
 			}
 
-			m_draggingPiece->row = row;
-			m_draggingPiece->col = col;
-
+			// Check for promotion
 			if (m_draggingPiece->canPromote && ((row == 0 && m_draggingPiece->color == WHITE) || row == 7 && m_draggingPiece->color == BLACK)) {
 				m_promotionPiece = m_draggingPiece;
 			}
+
+			// Check for castling
+			if (m_draggingPiece->type == KING && !m_draggingPiece->wasMoved && abs(col - m_draggingPiece->col) > 1) {
+				if (col == 2) {
+					Piece* rook = GetPieceAtPosition(m_draggingPiece->row, 0, m_pieces);
+					if (rook && !rook->wasMoved && rook->color == m_draggingPiece->color) {
+						rook->col = 3;
+						rook->wasMoved = true;
+					}
+				}
+				else if (col == 6) {
+					Piece* rook = GetPieceAtPosition(m_draggingPiece->row, 7, m_pieces);
+					if (rook && !rook->wasMoved && rook->color == m_draggingPiece->color) {
+						rook->col = 5;
+						rook->wasMoved = true;
+					}
+				}
+			}
+
+			m_draggingPiece->row = row;
+			m_draggingPiece->col = col;
+			m_draggingPiece->wasMoved = true;
 
 			m_playerTurn = m_playerTurn == WHITE ? BLACK : WHITE;
 		}
@@ -222,8 +242,15 @@ void Application::drawPieces() {
 		SDL_Rect rect{};
 		rect.w = width / 8;
 		rect.h = height / 8;
-		rect.x = m_draggingPiece->dragPositionX - width / 16;
-		rect.y = m_draggingPiece->dragPositionY - height / 16;
+		if (m_draggingPiece->dragPositionX != NULL) {
+			rect.x = m_draggingPiece->dragPositionX - width / 16;
+			rect.y = m_draggingPiece->dragPositionY - height / 16;
+		}
+		else {
+			rect.x = m_draggingPiece->col * width / 8;
+			rect.y = m_draggingPiece->row * height / 8;
+		}
+
 		SDL_RenderCopy(m_renderer, m_draggingPiece->texture, NULL, &rect);
 	}
 }
