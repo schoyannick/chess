@@ -205,19 +205,26 @@ void Application::drawBoard() {
 
 void Application::drawPieces() {
 	for (auto piece : m_pieces) {
+		// Skip dragging piece to draw it on top
+		if (piece == m_draggingPiece) {
+			continue;
+		}
 		SDL_Rect rect{};
 		rect.w = width / 8;
 		rect.h = height / 8;
-		if (piece->dragPositionX != NULL && piece->dragPositionY != NULL) {
-			rect.x = piece->dragPositionX - width / 16;
-			rect.y = piece->dragPositionY - height / 16;
-		}
-		else {
-			rect.x = piece->col * width / 8;
-			rect.y = piece->row * height / 8;
-		}
-
+		rect.x = piece->col * width / 8;
+		rect.y = piece->row * height / 8;
 		SDL_RenderCopy(m_renderer, piece->texture, NULL, &rect);
+	}
+
+	// Draw dragging piece
+	if (m_draggingPiece) {
+		SDL_Rect rect{};
+		rect.w = width / 8;
+		rect.h = height / 8;
+		rect.x = m_draggingPiece->dragPositionX - width / 16;
+		rect.y = m_draggingPiece->dragPositionY - height / 16;
+		SDL_RenderCopy(m_renderer, m_draggingPiece->texture, NULL, &rect);
 	}
 }
 
